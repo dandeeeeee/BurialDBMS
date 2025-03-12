@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "ResourceManager.hpp"
 #include "Scene.hpp"
 #include "Home.hpp"
 #include "Settings.hpp"
@@ -15,6 +16,7 @@ private:
     Camera camera;
     RenderTexture2D target;
     Shader shader;
+    ResourceManager& resourceManager;
 
 public:
 
@@ -44,6 +46,7 @@ public:
         constexpr int screenHeight = 450;
         InitWindow(screenWidth, screenHeight, "Raylib Template");
         SetTargetFPS(60);
+        resourceManager = ResourceManager::getInstance();
 
         while (!WindowShouldClose())
         {
