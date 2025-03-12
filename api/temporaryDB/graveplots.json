@@ -1,0 +1,47 @@
+[
+    {
+        "ID": 1,
+        "status": "occupied",
+        "occupantName": "John Doe",
+        "positionX": 100,
+        "positionY": 150,
+        "width": 50,
+        "height": 50
+    },
+    {
+        "ID": 2,
+        "status": "available",
+        "occupantName": "",
+        "positionX": 200,
+        "positionY": 150,
+        "width": 50,
+        "height": 50
+    },
+    {
+        "ID": 3,
+        "status": "reserved",
+        "occupantName": "Jane Smith",
+        "positionX": 300,
+        "positionY": 150,
+        "width": 50,
+        "height": 50
+    },
+    {
+        "ID": 4,
+        "status": "occupied",
+        "occupantName": "Michael Brown",
+        "positionX": 100,
+        "positionY": 250,
+        "width": 50,
+        "height": 50
+    },
+    {
+        "ID": 5,
+        "status": "available",
+        "occupantName": "",
+        "positionX": 200,
+        "positionY": 250,
+        "width": 50,
+        "height": 50
+    }
+]
