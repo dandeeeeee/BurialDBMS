@@ -11,7 +11,7 @@ public:
     std::string update() override
     {
         if (IsKeyPressed(KEY_ENTER))
-        {
+        {   
             return "Settings";
         }
 
@@ -20,7 +20,7 @@ public:
 
     void draw() override
     {
-        DrawRectangle(0, 0, 800, 450, MAROON);
+        DrawRectangleGradientH(0, 0, 800, 450,  DARKBLUE, BLANK);
     };
 
     ~Home() = default;
