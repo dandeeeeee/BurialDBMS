@@ -21,7 +21,7 @@ namespace utils
         }
         else 
         {
-            DrawText("Loading...", (rec.x + rec.width / 2) - 20, (rec.y + rec.height / 2) - 20, 20, RED);
+            DrawText("Loading...", static_cast<int>((rec.x + rec.width / 2) - 20), static_cast<int>((rec.y + rec.height / 2)) - 20, 20, RED);
         }
     };
 
@@ -29,9 +29,9 @@ namespace utils
     {
         Font font = ResourceManager::GetInstance().GetFont(filename);
         if (font.glyphs != nullptr && font.baseSize > 0) {
-            DrawTextEx(font, text.c_str(), pos, fontSize, 0, color);
+            DrawTextEx(font, text.c_str(), pos, static_cast<float>(fontSize), 0, color);
         } else {
-            DrawTextEx(GetFontDefault(), text.c_str(), pos, fontSize, 0, color);
+            DrawTextEx(GetFontDefault(), text.c_str(), pos, static_cast<float>(fontSize), 0, color);
         }
     };
 };

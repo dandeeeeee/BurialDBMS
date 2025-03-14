@@ -14,8 +14,8 @@ public:
 
     Login() 
     {
-        buttons.push_back(Button(Rectangle{150, 570, 500, 100}, Fade(SKYBLUE, 0.8), 0.25, "LOGIN", 50));
-        buttons.push_back(Button(Rectangle{150, 700, 500, 100}, Fade(BLUE, 0.8), 0.25, "REGISTER", 50));
+        buttons.push_back(Button(Rectangle{150, 570, 500, 100}, Fade(SKYBLUE, 0.8f), 0.25, "LOGIN", 50));
+        buttons.push_back(Button(Rectangle{150, 700, 500, 100}, Fade(BLUE, 0.8f), 0.25, "REGISTER", 50));
     };
 
     std::string update() override

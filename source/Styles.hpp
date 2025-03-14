@@ -20,10 +20,10 @@ public:
 
     void drawTextCentered() const
     {   
-        Vector2 textSize = MeasureTextEx(GetFontDefault(), text.c_str(), fontSize, 5);
+        Vector2 textSize = MeasureTextEx(ResourceManager::GetInstance().GetFont("LeagueSpartan-Bold.ttf"), text.c_str(), static_cast<float>(fontSize), 5);
         Vector2 textPos = {rec.x + rec.width/2 - textSize.x/2, rec.y + rec.height/2 - textSize.y/2};
 
-        DrawRectangleRounded(rec, roundness, 0, (isHovered() ? Fade(RAYWHITE, 0.8) : color));
+        DrawRectangleRounded(rec, roundness, 0, (isHovered() ? Fade(RAYWHITE, 0.8f) : color));
         utils::DrawText("LeagueSpartan-Bold.ttf", text, textPos, fontSize, RAYWHITE);
     };
 
