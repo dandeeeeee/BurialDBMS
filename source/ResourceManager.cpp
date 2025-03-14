@@ -5,6 +5,13 @@
 
 using namespace std::chrono;
 
+#include "ResourceManager.hpp"
+#include "cpr/cpr.h"
+#include <fstream>
+#include <iostream>
+
+using namespace std::chrono;
+
 ResourceManager& ResourceManager::GetInstance() {
     static ResourceManager instance;
     return instance;
@@ -29,6 +36,72 @@ ResourceManager::~ResourceManager() {
     for (auto& pair : textureCache) {
         UnloadTexture(pair.second);
     }
+    for (auto& pair : fontCache) {
+        UnloadFont(pair.second);
+    }
+}
+
+bool ResourceManager::DownloadFile(const std::string& url, const std::string& outputPath) {
+    cpr::Response response = cpr::Get(cpr::Url{url});
+    if (response.status_code == 200) {
+        std::ofstream file(outputPath, std::ios::binary);
+        file.write(response.text.c_str(), response.text.size());
+        file.close();
+        return true;
+    }
+    return false;
+}
+
+void ResourceManager::LoadFonts() {
+    // List of fonts to load (you can extend this list as needed)
+    std::vector<std::string> fontFiles = {
+        "LeagueSpartan-Bold.ttf",
+        "Poppins-Medium.ttf",
+        "Poppins-MediumItalic.ttf"
+    };
+
+    for (const auto& fontFile : fontFiles) {
+        std::string cachePath = CACHE_DIR + "/" + fontFile;
+        std::string url = "http://127.0.0.1:8000/fonts/" + fontFile;
+
+        // Download the font if it doesn't exist or is expired
+        if (FileExists(cachePath)) {
+            if (IsFileExpired(cachePath)) {
+                fs::remove(cachePath);
+            }
+        }
+
+        if (!FileExists(cachePath)) {
+            if (!DownloadFile(url, cachePath)) {
+                std::cerr << "Failed to download font: " << fontFile << std::endl;
+                continue;
+            }
+        }
+
+        // Load the font
+        Font font = LoadFontEx(cachePath.c_str(), 320, nullptr, 0);
+
+        // Check if the font is valid
+        if (font.glyphs != nullptr && font.baseSize > 0) {
+            // Cache the font
+            fontCache[fontFile] = font;
+            std::cout << "Loaded font: " << fontFile << std::endl;
+        } else {
+            std::cerr << "Failed to load font: " << fontFile << std::endl;
+            UnloadFont(font); // Unload the invalid font
+        }
+    }
+}
+
+
+Font ResourceManager::GetFont(const std::string& filename) {
+    if (fontCache.find(filename) != fontCache.end()) {
+        return fontCache[filename];
+    } else {
+        std::cerr << "Font not found: " << filename << std::endl;
+        return Font();
+    }
+    return Font();
 }
 
 void ResourceManager::LoadConfig() {

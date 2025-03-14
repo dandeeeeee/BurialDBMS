@@ -24,4 +24,14 @@ namespace utils
             DrawText("Loading...", (rec.x + rec.width / 2) - 20, (rec.y + rec.height / 2) - 20, 20, RED);
         }
     };
+
+    inline void DrawText(std::string filename, std::string text, Vector2 pos, int fontSize, Color color)
+    {
+        Font font = ResourceManager::GetInstance().GetFont(filename);
+        if (font.glyphs != nullptr && font.baseSize > 0) {
+            DrawTextEx(font, text.c_str(), pos, fontSize, 0, color);
+        } else {
+            DrawTextEx(GetFontDefault(), text.c_str(), pos, fontSize, 0, color);
+        }
+    };
 };

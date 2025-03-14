@@ -46,13 +46,16 @@ public:
     void run() 
     {
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+        // 3840 × 2160
         constexpr int screenWidth = 1920;
         constexpr int screenHeight = 1080;
-        InitWindow(1080, 720, "BurialDBMS");
+        InitWindow(1280, 720, "BurialDBMS");
         SetTargetFPS(60);
 
         target = LoadRenderTexture(screenWidth, screenHeight);
-        SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
+        SetTextureFilter(target.texture, TEXTURE_FILTER_TRILINEAR);
+
+        ResourceManager::GetInstance().LoadFonts();
     
         while (!WindowShouldClose()) {
             // ? Process pending textures in the main thread
