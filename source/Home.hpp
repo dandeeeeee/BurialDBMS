@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.hpp"
+#include "Utils.hpp"
 
 
 class Home : public Scene
@@ -12,7 +13,7 @@ public:
     {
         if (IsKeyPressed(KEY_ENTER))
         {   
-            return "Settings";
+            return "Login";
         }
 
         return "Home";
@@ -20,7 +21,7 @@ public:
 
     void draw() override
     {
-        DrawRectangleGradientH(0, 0, 800, 450,  DARKBLUE, BLANK);
+        utils::DrawTexture("bg.png", "Home", {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
     };
 
     ~Home() = default;

@@ -40,7 +40,7 @@ public:
     static ResourceManager& GetInstance();
     ~ResourceManager();
 
-    Texture2D GetTexture(const std::string& url, const std::string& filename, const std::string& scene);
+    Texture2D GetTexture(const std::string& filename, const std::string& scene);
     void ReleaseTexture(const std::string& url);
     void SwitchScene(const std::string& newScene);
     void ProcessPendingImages(); // Call this in the main thread to process pending textures
@@ -61,6 +61,7 @@ private:
     std::unordered_map<std::string, int> textureRefCount; // Reference counts for textures
     std::unordered_map<std::string, std::string> textureSceneMap; // Maps textures to scenes
     std::unordered_set<std::string> activeSceneTextures; // Textures used in the current scene
+    std::unordered_set<std::string> loadingTextures; 
 
     std::queue<std::tuple<std::string, std::string, std::string>> imageQueue; // Queue for images to be loaded
     std::queue<std::tuple<std::string, Image, std::string>> pendingImages; // Queue for images ready to be converted to textures

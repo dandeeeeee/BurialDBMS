@@ -115,23 +115,37 @@ void ResourceManager::ProcessPendingImages() {
         textureRefCount[url] = 1;
         textureSceneMap[url] = scene;
         activeSceneTextures.insert(url);
+        loadingTextures.erase(url); 
     }
 }
 
-Texture2D ResourceManager::GetTexture(const std::string& url, const std::string& filename, const std::string& scene) {
+Texture2D ResourceManager::GetTexture(const std::string& filename, const std::string& scene) {
     std::string cachePath = CACHE_DIR + "/" + filename;
+    std::string url = "http://127.0.0.1:8000/images/" + filename;
 
     std::lock_guard<std::mutex> lock(mutex);
+
+    // Check if the texture is already cached
     if (textureCache.find(url) != textureCache.end()) {
         textureRefCount[url]++;
         return textureCache[url];
     }
 
+    // Check if the texture is already being loaded
+    if (loadingTextures.find(url) != loadingTextures.end()) {
+        return Texture2D();
+    }
+
+    // Mark the texture as being loaded
+    loadingTextures.insert(url);
+
+    // Start an asynchronous load
     std::thread imageLoader(&ResourceManager::LoadImageAsync, this, url, cachePath, scene);
     imageLoader.detach();
 
-    return Texture2D(); // Return a placeholder texture while loading
+    return Texture2D(); 
 }
+
 
 void ResourceManager::ReleaseTexture(const std::string& url) {
     std::lock_guard<std::mutex> lock(mutex);

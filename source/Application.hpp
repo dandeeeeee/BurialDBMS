@@ -18,7 +18,6 @@ private:
     RenderTexture2D target;
     Shader shader;
 
-
 public:
 
     // * Singleton
@@ -48,34 +47,24 @@ public:
         InitWindow(screenWidth, screenHeight, "Raylib Template");
         SetTargetFPS(60);
     
-        std::string textureUrl = "http://127.0.0.1:8000/images/bg.jpg";
-        std::string textureFilename = "bg.png";
-        std::string textureScene = "Login";
-        ResourceManager::GetInstance().GetTexture(textureUrl, textureFilename, textureScene);
-    
         while (!WindowShouldClose()) {
-            // Process pending textures in the main thread
+            // ? Process pending textures in the main thread
             ResourceManager::GetInstance().ProcessPendingImages();
-    
-            // Re-fetch the texture from the ResourceManager to check if it has been loaded
-            Texture2D texture = ResourceManager::GetInstance().GetTexture(textureUrl, textureFilename, textureScene);
+
             BeginDrawing();
+            
+            if (sceneFactory.find(currentScene) != sceneFactory.end())
+             {
+                 std::string nextScene = sceneFactory[currentScene]->update();
+                 if (sceneFactory.find(nextScene) != sceneFactory.end()) currentScene = nextScene;
+                 else std::cout << "SCENE NOT FOUNDDDDDD" << std::endl; // TODO: Implement a logger
+                 sceneFactory[currentScene]->draw();
+             }  
+
             ClearBackground(RAYWHITE);
-    
-            // Draw the texture if loaded
-            if (texture.id != 0) {
-                DrawTexturePro(texture, {0.0f, 0.0f, (float)texture.width, (float)texture.height},
-                            {0.0f, 0.0f, (float)GetScreenWidth(), (float)GetScreenHeight()}, {0, 0}, 0.0f, WHITE);
-                DrawRectangleGradientH(300, 0, GetScreenWidth(), GetScreenHeight(),  DARKBLUE, BLANK);
-            }
-            else {
-                DrawText("Loading...", 10, 10, 20, RED);
-            }
     
             EndDrawing();
         }
-    
-        // Unload the texture when done (optional, as ResourceManager will clean up)
     }
 
     

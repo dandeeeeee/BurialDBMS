@@ -2,6 +2,7 @@
 
 
 #include "Scene.hpp"
+#include "Utils.hpp"
 
 
 class Login : public Scene
@@ -23,7 +24,7 @@ public:
 
     void draw() override
     {
-        DrawRectangle(0, 0, 800, 450, YELLOW);
+        utils::DrawTexture("bg.jpg", "Login", {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
     };
 
     ~Login() = default;
