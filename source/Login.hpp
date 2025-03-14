@@ -24,7 +24,7 @@ public:
 
     void draw() override
     {
-        utils::DrawTexture("bg.jpg", "Login", {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
+        utils::DrawTexture("LoginBG.png", "Login", {0, 0, APP_WIDTH, APP_HEIGHT});
     };
 
     ~Login() = default;

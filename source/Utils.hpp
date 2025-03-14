@@ -3,6 +3,8 @@
 #include "ResourceManager.hpp"
 #include <string>
 
+#define APP_WIDTH 1920
+#define APP_HEIGHT 1080
 
 namespace utils
 {

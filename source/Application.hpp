@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "raymath.h"
 #include "ResourceManager.hpp"
 #include "Scene.hpp"
 #include "Home.hpp"
@@ -8,6 +9,8 @@
 #include <memory>
 #include <map>
 #include <iostream>
+
+#define MIN(a,b) (((a)<(b))?(a):(b))
 
 
 class Application
@@ -40,28 +43,59 @@ public:
     };
 
 
-    void run() {
+    void run() 
+    {
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        constexpr int screenWidth = 800;
-        constexpr int screenHeight = 450;
-        InitWindow(screenWidth, screenHeight, "Raylib Template");
+        constexpr int screenWidth = 1920;
+        constexpr int screenHeight = 1080;
+        InitWindow(1080, 720, "BurialDBMS");
         SetTargetFPS(60);
+
+        target = LoadRenderTexture(screenWidth, screenHeight);
+        SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
     
         while (!WindowShouldClose()) {
             // ? Process pending textures in the main thread
             ResourceManager::GetInstance().ProcessPendingImages();
 
-            BeginDrawing();
-            
-            if (sceneFactory.find(currentScene) != sceneFactory.end())
-             {
-                 std::string nextScene = sceneFactory[currentScene]->update();
-                 if (sceneFactory.find(nextScene) != sceneFactory.end()) currentScene = nextScene;
-                 else std::cout << "SCENE NOT FOUNDDDDDD" << std::endl; // TODO: Implement a logger
-                 sceneFactory[currentScene]->draw();
-             }  
+            // ? Setup the render target
+            float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
+            Vector2 mouse = GetMousePosition();
+            Vector2 virtualMouse = { 0 };
+            virtualMouse.x = (mouse.x - ((float)GetScreenWidth() - ((float)screenWidth*scale))*0.5f)/scale;
+            virtualMouse.y = (mouse.y - ((float)GetScreenHeight() - ((float)screenHeight*scale))*0.5f)/scale;
+            virtualMouse = Vector2Clamp(virtualMouse, Vector2Zero(), Vector2{ (float)screenWidth, (float)screenHeight });
 
-            ClearBackground(RAYWHITE);
+            SetMouseOffset(static_cast<int>(-((float)GetScreenWidth() - ((float)screenWidth*scale))*0.5f),
+                        static_cast<int>(-((float)GetScreenHeight() - ((float)screenHeight*scale))*0.5f));
+            SetMouseScale(1/scale, 1/scale);
+
+
+            // ? capture screen
+            BeginTextureMode(target);
+
+            ClearBackground(BLANK);
+
+                if (sceneFactory.find(currentScene) != sceneFactory.end())
+                {
+                    std::string nextScene = sceneFactory[currentScene]->update();
+                    if (sceneFactory.find(nextScene) != sceneFactory.end()) currentScene = nextScene;
+                    else std::cout << "SCENE NOT FOUNDDDDDD" << std::endl; // TODO: Implement a logger
+                    sceneFactory[currentScene]->draw();
+                }  
+
+            EndTextureMode();
+
+            BeginDrawing();
+                
+                ClearBackground(BLANK);
+
+                // ? Draw the render target
+                DrawTexturePro(target.texture, Rectangle{ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height }, 
+                        Rectangle{((float)GetScreenWidth() - ((float)screenWidth*scale))*0.5f,
+                                    ((float)GetScreenHeight() - ((float)screenHeight*scale))*0.5f,
+                                    (float)screenWidth*scale, (float)screenHeight*scale},
+                                    Vector2Zero(), 0.0f, WHITE);
     
             EndDrawing();
         }
