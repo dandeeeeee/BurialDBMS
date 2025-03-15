@@ -9,6 +9,16 @@ public:
 
     Settings() = default;
 
+    void onSwitch() override
+    {
+        // ? Load the settings scene
+    };
+
+    void onExit() override
+    {
+        // ? Unload the settings scene
+    };
+
     std::string update() override
     {
         if (IsKeyPressed(KEY_ENTER))

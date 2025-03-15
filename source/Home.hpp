@@ -9,6 +9,16 @@ public:
 
     Home() = default;
 
+    void onSwitch() override
+    {
+        // ? Load the home scene
+    };
+
+    void onExit() override
+    {
+        // ? Unload the home scene
+    };
+
     std::string update() override
     {
         if (IsKeyPressed(KEY_ENTER))

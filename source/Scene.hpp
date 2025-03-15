@@ -29,6 +29,8 @@ public:
     Scene() = default;
     virtual std::string update() = 0; // ? returns the name of the current or next scene
     virtual void draw() = 0;
+    virtual void onSwitch() = 0;  
+    virtual void onExit() = 0;
     virtual ~Scene() = default;
 
 private:

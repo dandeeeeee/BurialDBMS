@@ -8,7 +8,7 @@
 
 namespace utils
 {
-    inline void DrawTexture(std::string filename, std::string scene, Rectangle rec) 
+    inline bool DrawTexture(std::string filename, std::string scene, Rectangle rec) 
     {
         Texture2D texture = ResourceManager::GetInstance().GetTexture(filename, scene);
         if (texture.id != 0) {
@@ -18,10 +18,12 @@ namespace utils
                 {0, 0},
                 0.0f,
                 WHITE);
+            return true;
         }
         else 
         {
-            DrawText("Loading...", static_cast<int>((rec.x + rec.width / 2) - 20), static_cast<int>((rec.y + rec.height / 2)) - 20, 20, RED);
+            DrawText("Loading...", static_cast<int>((rec.x + rec.width / 2) - 50), static_cast<int>((rec.y + rec.height / 2)) - 50, 50, DARKBLUE);
+            return false;
         }
     };
 
