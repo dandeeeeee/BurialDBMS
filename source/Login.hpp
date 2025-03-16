@@ -2,7 +2,10 @@
 #include "Scene.hpp"
 #include "Utils.hpp"
 #include "Styles.hpp"
+#include "Textbox.hpp"
 #include <vector>
+
+#include <iostream>
 
 enum LoginState
 {
@@ -14,8 +17,13 @@ enum LoginState
 class Login : public Scene
 {
 public:
-    Login() = default;
 
+    Login() 
+        : backButton(Rectangle{150, 570, 500, 100}, Fade(GRAY, 0.8f), 0.25, "BACK", 50),
+        usernameTextBox(Rectangle{150, 400, 500, 50}, 20, BLACK, DARKGRAY),
+        passwordTextBox(Rectangle{150, 470, 500, 50}, 20, BLACK, DARKGRAY)
+        {}
+    
     void onSwitch() override
     {
         std::cout << "Switched to Login" << std::endl;
@@ -29,6 +37,9 @@ public:
         backButton.setOpacity(0.0f);
         backButton.fadeOut(); 
 
+        usernameTextBox = TextBox(Rectangle{150, 400, 500, 50}, 20, BLACK, DARKGRAY);
+        passwordTextBox = TextBox(Rectangle{150, 470, 500, 50}, 20, BLACK, DARKGRAY);
+
         for (auto& button : buttons) button.setOpacity(0.8f);
     };
 
@@ -36,10 +47,17 @@ public:
     {
         std::cout << "Exited Login" << std::endl;
         buttons.clear();
+        backButton = Button();
+        usernameTextBox = TextBox();
+        passwordTextBox = TextBox();
     };
 
     std::string update() override
     {
+        usernameTextBox.update();
+        passwordTextBox.update();
+        // std::cout << "Username: " << usernameTextBox.getText() << std::endl;
+        // std::cout << "Password: " << passwordTextBox.getText() << std::endl;
         return "Login";
     };
 
@@ -47,6 +65,9 @@ public:
     {
         if (utils::DrawTexture("LoginBG.png", "Login", {0, 0, APP_WIDTH, APP_HEIGHT}))
         {
+            usernameTextBox.draw();
+            passwordTextBox.draw();
+
             for (auto& button : buttons) {
                 button.updateFade(0.8f);
             }
@@ -112,6 +133,9 @@ private:
     std::string password;
     std::vector<Button> buttons;
     Button backButton;
+
+    TextBox usernameTextBox;
+    TextBox passwordTextBox;
 
     bool login;
     bool signup;

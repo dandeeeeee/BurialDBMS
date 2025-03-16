@@ -57,7 +57,6 @@ public:
         return isVisible && opacity > 0.0f;
     }
 
- 
     float getOpacity() const { return opacity; }
 
     void setOpacity(float op) { 
