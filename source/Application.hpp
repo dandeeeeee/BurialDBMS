@@ -47,8 +47,8 @@ public:
     {
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         // 3840 × 2160
-        constexpr int screenWidth = 1920;
-        constexpr int screenHeight = 1080;
+        constexpr int screenWidth = 3840;
+        constexpr int screenHeight = 2160;
         InitWindow(1280, 720, "BurialDBMS");
         SetTargetFPS(60);
 

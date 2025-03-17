@@ -19,26 +19,26 @@ class Login : public Scene
 public:
 
     Login() 
-        : backButton(Rectangle{150, 570, 500, 100}, Fade(GRAY, 0.8f), 0.25, "BACK", 50),
-        usernameTextBox(Rectangle{150, 400, 500, 50}, 20, BLACK, DARKGRAY),
-        passwordTextBox(Rectangle{150, 470, 500, 50}, 20, BLACK, DARKGRAY)
+        : backButton(Rectangle{300, 1140, 1000, 200}, Fade(GRAY, 0.8f), 0.25, "BACK", 100),
+        usernameTextBox(Rectangle{300, 700, 1200, 140}, 100, Fade(RAYWHITE, 0.8f), DARKGRAY, DARKGRAY, "Enter usernameLIGHT", LIGHTGRAY),
+        passwordTextBox(Rectangle{300, 900, 1200, 140}, 100, Fade(RAYWHITE, 0.8f), DARKGRAY, DARKGRAY, "Enter password", LIGHTGRAY)
         {}
     
     void onSwitch() override
     {
         std::cout << "Switched to Login" << std::endl;
-        buttons.push_back(Button(Rectangle{150, 570, 500, 100}, Fade(SKYBLUE, 0.8f), 0.25, "LOGIN", 50));
-        buttons.push_back(Button(Rectangle{150, 700, 500, 100}, Fade(BLUE, 0.8f), 0.25, "SIGN UP", 50));
+        buttons.push_back(Button(Rectangle{300, 1140, 1000, 200}, Fade(SKYBLUE, 0.8f), 0.25, "LOGIN", 100));
+        buttons.push_back(Button(Rectangle{300, 1400, 1000, 200}, Fade(BLUE, 0.8f), 0.25, "SIGN UP", 100));
         currentState = LOGIN;
         login = false;
         signup = false;
 
-        backButton = Button(Rectangle{150, 570, 500, 100}, Fade(GRAY, 0.8f), 0.25, "BACK", 50);
+        backButton = Button(Rectangle{300, 1140, 1000, 200}, Fade(GRAY, 0.8f), 0.25, "BACK", 100);
         backButton.setOpacity(0.0f);
         backButton.fadeOut(); 
 
-        usernameTextBox = TextBox(Rectangle{150, 400, 500, 50}, 20, BLACK, DARKGRAY);
-        passwordTextBox = TextBox(Rectangle{150, 470, 500, 50}, 20, BLACK, DARKGRAY);
+        usernameTextBox = TextBox(Rectangle{300, 700, 1200, 140}, 100, Fade(RAYWHITE, 0.8f), DARKGRAY, DARKGRAY, "Enter username", LIGHTGRAY);
+        passwordTextBox = TextBox(Rectangle{300, 900, 1200, 140}, 100, Fade(RAYWHITE, 0.8f), DARKGRAY, DARKGRAY, "Enter password", LIGHTGRAY);
 
         for (auto& button : buttons) button.setOpacity(0.8f);
     };

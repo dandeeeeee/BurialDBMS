@@ -8,19 +8,19 @@
 
 #define BACKSPACE_DELETION_DELAY 0.15f
 #define ARROW_KEY_DELAY BACKSPACE_DELETION_DELAY
-#define STANDARD_LINE_SPACING 2.0f
-
-
-// TODO: ADD COPY AND PASTE SUPPORT?
+#define STANDARD_LINE_SPACING 0.5f
 
 class TextBox : public GUI
 {
 private:
     Rectangle bounds;
     std::string text;
+    std::string textPlaceholder; 
     int fontSize;
     Color textColor;
     Color cursorColor;
+    Color bodyColor;
+    Color placeholderColor;
     bool isFocused;
     int cursorPosition;
     float cursorBlinkTime;
@@ -33,9 +33,10 @@ private:
 public:
     TextBox() = default;
 
-    TextBox(Rectangle bounds, int fontSize, Color textColor, Color cursorColor)
-        : bounds(bounds), fontSize(fontSize), textColor(textColor), cursorColor(cursorColor),
-          isFocused(false), cursorPosition(0), cursorBlinkTime(0.0f), cursorVisible(true), textOffsetX(0.0f),
+    TextBox(Rectangle bounds, int fontSize, Color bodyColor, Color textColor, Color cursorColor, std::string placeholder = "", Color placeholderColor = GRAY)
+        : bounds(bounds), fontSize(fontSize), textColor(textColor), bodyColor(bodyColor), cursorColor(cursorColor),
+          textPlaceholder(placeholder), placeholderColor(placeholderColor),
+          isFocused(false), cursorPosition(0), cursorBlinkTime(0.0f), cursorVisible(true), textOffsetX(bounds.width * -0.02f), // ? 2% of the width
           backspaceTimer(0.0f), leftArrowTimer(0.0f), rightArrowTimer(0.0f)
     {
         text = "";
@@ -139,19 +140,25 @@ public:
         }
     }
 
-    void draw() {
-        DrawRectangleRec(bounds, Fade(LIGHTGRAY, opacity));
+    void draw() 
+    {
+        DrawRectangleRounded(bounds, 0.25f, 0, bodyColor);
 
         BeginScissorMode(static_cast<int>(bounds.x), static_cast<int>(bounds.y),
                          static_cast<int>(bounds.width), static_cast<int>(bounds.height));
 
         Vector2 textPosition = { bounds.x + 5 - textOffsetX, bounds.y + (bounds.height - fontSize) / 2 };
-        DrawTextEx(GetFontDefault(), text.c_str(), textPosition, static_cast<float>(fontSize), STANDARD_LINE_SPACING, textColor);
+
+        if (text.empty() && !isFocused && !textPlaceholder.empty()) { // ? Draw placeholder
+            DrawTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), textPlaceholder.c_str(), textPosition, static_cast<float>(fontSize), STANDARD_LINE_SPACING, placeholderColor);
+        } else { // ? Draw actual text
+            DrawTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), text.c_str(), textPosition, static_cast<float>(fontSize), STANDARD_LINE_SPACING, textColor);
+        }
 
         if (isFocused && cursorVisible) {
-            Vector2 cursorPositionVec = MeasureTextEx(GetFontDefault(), text.substr(0, cursorPosition).c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING);
-            DrawLine(static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + 5),
-                     static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + bounds.height - 5),
+            Vector2 cursorPositionVec = MeasureTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), text.substr(0, cursorPosition).c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING);
+            DrawLine(static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + 10),
+                     static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + bounds.height - 10),
                      cursorColor);
         }
 
@@ -182,15 +189,15 @@ public:
 
 private:
     void adjustTextOffset() {
-        float textWidth = MeasureTextEx(GetFontDefault(), text.c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING).x;
-        float cursorX = MeasureTextEx(GetFontDefault(), text.substr(0, cursorPosition).c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING).x;
+        float textWidth = MeasureTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), text.c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING).x;
+        float cursorX = MeasureTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), text.substr(0, cursorPosition).c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING).x;
 
         if (cursorX - textOffsetX > bounds.width - 10) {
             textOffsetX = cursorX - (bounds.width - 10);
         } else if (cursorX - textOffsetX < 0) {
             textOffsetX = cursorX;
         }
-
-        textOffsetX = (std::max)(0.0f, (std::min)(textOffsetX, textWidth - bounds.width + 10));
+                                // ? 2% of the width
+        textOffsetX = (std::max)(bounds.width * -0.02f, (std::min)(textOffsetX, textWidth - bounds.width + 10));
     }
 };
