@@ -157,8 +157,8 @@ public:
 
         if (isFocused && cursorVisible) {
             Vector2 cursorPositionVec = MeasureTextEx(ResourceManager::GetInstance().GetFont("Poppins-Medium.ttf"), text.substr(0, cursorPosition).c_str(), static_cast<float>(fontSize), STANDARD_LINE_SPACING);
-            DrawLine(static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + 10),
-                     static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + bounds.height - 10),
+            DrawLine(static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + (bounds.height * 0.1785f)), // ? 17.85% of the height
+                     static_cast<int>(bounds.x + 5 + cursorPositionVec.x - textOffsetX), static_cast<int>(bounds.y + bounds.height - (bounds.height * 0.1785f)), // ? 17.85% of the height
                      cursorColor);
         }
 
